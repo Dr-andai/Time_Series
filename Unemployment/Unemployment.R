@@ -55,13 +55,13 @@ rand.long_unemp[, impute.ff := na.locf(Rate, na.rm = FALSE)]
 bias.long_unemp[, impute.ff := na.locf(Rate, na.rm = FALSE)]
 
 
-long_unemp[200:350, plot(Year, Rate,
+long_unemp[350:400, plot(Year, Rate,
                          col = 1, lwd=2,type='b')]
 
-rand.long_unemp[200:350, lines(Year, impute.ff,
+rand.long_unemp[350:400, lines(Year, impute.ff,
                          col = 2, lwd=2,lty=2)]
 
-rand.long_unemp[200:350][rpt== TRUE, points(Year, impute.ff,
+rand.long_unemp[350:400][rpt== TRUE, points(Year, impute.ff,
                                             col=2, pch=6, cex =2)]
 
 
