@@ -1,0 +1,116 @@
+---
+title: "BCI - Eye State"
+output: html_document
+date: "2024-05-24"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## EYE State 
+It is quite important in the applications of medicine; for example, the disabled people are able to interact better by utilizing this way, and this is achieved by founding a method that acts like a bridge between computer and human brain (Ahmadi et al). 
+
+
+```{r cars}
+# Load Libraries
+library(rio)
+library(rstatix)
+library(tidyverse)
+library(dplyr)
+library(FactoMineR)
+library(factoextra)
+library(corrplot)
+
+# import data
+eeg <- import("EEG/EEG Eye State.arff")
+```
+
+# Coding of EEG cariables
+
+- AF3: Frontal lobe, left hemisphere
+- F7: Frontal lobe, left hemisphere, near the temple
+- F3: Frontal lobe, left hemisphere
+- FC5: Frontal lobe, left hemisphere, near the center
+- T7: Temporal lobe, left hemisphere
+- P7: Parietal lobe, left hemisphere
+- O1: Occipital lobe, left hemisphere
+- O2: Occipital lobe, right hemisphere
+- P8: Parietal lobe, right hemisphere
+- T8: Temporal lobe, right hemisphere
+- FC6: Frontal lobe, right hemisphere, near the center
+- F4: Frontal lobe, right hemisphere
+- F8: Frontal lobe, right hemisphere, near the temple
+- AF4: Frontal lobe, right hemisphere
+
+```{r}
+## DATA ANALYSIS
+# Eye Closed
+eye_closed <- eeg[eeg$eyeDetection == 1, ]
+# Eye Open
+eye_open <- eeg[eeg$eyeDetection == 0, ]
+
+# dropping the "eye detection" column
+eye_closed <- eye_closed[, -15]
+eye_open <- eye_open[, -15]
+
+## get STATS
+eeg_closed_stats <- get_summary_stats(eye_closed)
+eye_open_stats <- get_summary_stats(eye_open)
+
+# store in a data frame
+df_eeg_closed_stats <- as.data.frame(eeg_closed_stats)
+df_eye_open_stats <- as.data.frame(eye_open_stats)
+```
+
+```{r pressure}
+# Overall dataset
+# dropping the "eye detection" column
+eeg_variables <- eeg[, -15]
+
+# correlation matrix
+corr_eeg <- cor(eeg_variables)
+corr_eeg <- round(corr_eeg, 2)
+
+corrplot(corr_eeg)
+
+```
+
+```{r pressure}
+## PCA plotting
+# - Dimensionality reduction
+# - Data visualization
+# - Feature engineering
+
+eeg_prcomp <- prcomp(eeg_variables, scale=TRUE)
+df_eeg_prcomp <- as.data.frame(eeg_prcomp$x)
+df_eeg_prcomp$label <- eeg$eyeDetection
+
+plot(eeg_prcomp_x$PC1,
+     eeg_prcomp_x$AF3,
+     col = eeg_prcomp_x$label,
+     pch = 19,
+     main="Figure 1: 2D Scatterplot",
+     log = "y",
+     xlab="PC1",
+     ylab="AF3")
+legend("bottomright",
+       legend = levels(eeg_prcomp_x$label),
+       col = seq_along(levels(eeg_prcomp_x$label)),
+       pch = 19)
+
+```
+
+
+```{r}
+# scree plot of variance
+fviz_eig (eeg_prcomp, addlabels = TRUE)
+# # Biplot
+fviz_pca_biplot(eeg_prcomp)
+# eeg_prcomp_x$label <- eeg$eyeDetection
+# #Biplot with colored groups
+fviz_pca_biplot(eeg_prcomp, label = "var", habillage = df_eeg_prcomp$label)
+# install.packages("caret")
+# View(eeg)
+```
+# Machine Learning plots

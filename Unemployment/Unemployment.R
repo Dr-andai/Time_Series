@@ -66,7 +66,14 @@ rand.long_unemp[350:400][rpt== TRUE, points(Year, impute.ff,
 
 
 
+### 
+# where a moving average data imputation is a better fit for
+# the task than a forward fill. For example, if the data is noisy,
 
+rand.long_unemp[, impute.rm.nolookahead := rollapply(c(NA,NA,Rate),3,
+                                                     function(x){
+                                                       if(!is.na(x[3]))x[3] else mean(x, na.rm = T)
+                                                     })]
 
 
 
