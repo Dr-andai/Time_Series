@@ -1,9 +1,7 @@
 # Unemployment 
-
 # import libraries
 
 library("rio")
-# library('tidyverse')
 library("zoo")
 library("data.table")
 
@@ -39,8 +37,6 @@ num.to.select <- .2 * length(high.long_unemp.idx)
 high.long_unemp.idx <- sample(high.long_unemp.idx,)
 bias.long_unemp <- long_unemp[-high.long_unemp.idx]
 
-
-
 ##
 all.dates <- seq(long_unemp$Year[1], tail(long_unemp$Year, 1), "months")
 
@@ -63,8 +59,6 @@ rand.long_unemp[350:400, lines(Year, impute.ff,
 
 rand.long_unemp[350:400][rpt== TRUE, points(Year, impute.ff,
                                             col=2, pch=6, cex =2)]
-
-
 
 ### 
 # where a moving average data imputation is a better fit for

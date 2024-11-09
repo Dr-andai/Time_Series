@@ -101,29 +101,28 @@ fviz_eig (eeg_prcomp, addlabels = TRUE)
 # Biplot
 fviz_pca_biplot(eeg_prcomp)
 eeg_prcomp_x$label <- eeg$eyeDetection
+
 #Biplot with colored groups
 fviz_pca_biplot(eeg_prcomp, label = "var", habillage = eeg_prcomp_x$label)
 install.packages("caret")
 View(eeg)
+
+
 library(caret)
 id <- createDataPartition(eeg$eyeDetection, p = 0.8, list = FALSE)
 train = eeg[id, ]
 test = eeg[-id, ]
 View(train)
 cb = class::lvqinit(train[1:4], train$eyeDetection)
+
 # training set in a codebook.
 build.cb = class::olvq1(train[1:4], train$eyeDetection, cb)
+
 # classify test set from LVQ Codebook for test data
 predict = class::lvqtest(build.cb, test[1:4])
+
 # confusion matrix.
 caret::confusionMatrix(test$eyeDetection, predict)
-install.packages("randomForest")
-library(randomForest)
-rf_model <- randomForest(eyeDetection ~ ., data=train, ntree=500, mtry=3, importance = TRUE)
-print(rf_model)
-predictions <- predict(rf_model, test)
-cm <- confusionMatrix(predictions, test$eyeDetection)
-cm
 
 
 
